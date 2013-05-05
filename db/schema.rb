@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130505222532) do
+ActiveRecord::Schema.define(:version => 20130505223622) do
 
   create_table "moments", :force => true do |t|
     t.string   "name"
@@ -26,14 +26,12 @@ ActiveRecord::Schema.define(:version => 20130505222532) do
   add_index "moments", ["author_id"], :name => "index_moments_on_author_id"
 
   create_table "responses", :force => true do |t|
-    t.integer  "moment_id",                   :null => false
-    t.integer  "user_id",                     :null => false
-    t.integer  "hearts_count", :default => 0
-    t.datetime "created_at",                  :null => false
-    t.datetime "updated_at",                  :null => false
+    t.integer  "user_id",     :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "timeslot_id", :null => false
   end
 
-  add_index "responses", ["moment_id"], :name => "index_responses_on_moment_id"
   add_index "responses", ["user_id"], :name => "index_responses_on_user_id"
 
   create_table "roles", :force => true do |t|
