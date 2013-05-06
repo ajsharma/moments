@@ -16,9 +16,6 @@ class Ability
         can :manage, Moment, author_id: user.id
         can :share, Moment, author_id: user.id
 
-        # author can manage hearts
-        can :heart, Moment, author_id: user.id
-        can :heart, Moment # needs to be updated to token access only
     end
     # TODO: users with token can heart moments
 

@@ -8,7 +8,7 @@ Moments::Application.routes.draw do
   end
 
   match '/moments/:id/heart' => 'moments#heart', :as => :heart_moment, :via => :post
-  match '/m/:muddle' => 'moments#shared', :as => :share_moment, :via => :get
+  match '/m/:muddle/:token' => 'moments#shared', :as => :share_moment, :via => :get
 
   match 'welcome' => 'pages#welcome', :as => :welcome_page
 

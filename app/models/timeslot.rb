@@ -9,6 +9,7 @@ class Timeslot < ActiveRecord::Base
 
   # followed by association macros  
   belongs_to :moment
+  has_many :responses
 
   # and validation macros
 

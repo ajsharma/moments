@@ -4,13 +4,14 @@ class MomentsController < ApplicationController
   before_filter :find_moment, :except => [:index, :shared, :new, :create]
   before_filter :find_moment_by_muddle, :except => [:index, :show, :new, :create] 
   before_filter :restrict_access_to_author, :only => [:edit, :show, :update, :destroy] 
-  before_filter :restrict_access_to_respondent_or_token, :only => [:shared] 
+  before_filter :restrict_access_to_token, :only => [:shared] 
 
   # GET /moments
   # GET /moments.json
   def index
     if current_user
       @moments = current_user.moments 
+      @authored_moments = current_user.authored_moments
     else
       @moments = []
     end
@@ -64,10 +65,10 @@ class MomentsController < ApplicationController
 
     respond_to do |format|
       if @moment.save
-        # create a response for the user
-        @response = Response.where(:user_id => current_user.id, :moment_id => @moment.id).first_or_create!
+        # TODO: create timeslots
+        # TODO: create a response for each activated timeslot
 
-        format.html { redirect_to share_moment_path(:muddle => @moment.muddle), notice: 'Moment was successfully created.' }
+        format.html { redirect_to share_moment_path(@moment.muddle, @moment.token), notice: 'Moment was successfully created.' }
         format.json { render json: @moment, status: :created, location: @moment }
       else
         format.html { render action: "new" }
@@ -83,7 +84,7 @@ class MomentsController < ApplicationController
 
     respond_to do |format|
       if @moment.update_attributes(params[:moment])
-        format.html { redirect_to share_moment_path(:muddle => @moment.muddle), notice: 'Moment was successfully updated.' }
+        format.html { redirect_to share_moment_path(@moment.muddle, @moment.token), notice: 'Moment was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -113,7 +114,7 @@ class MomentsController < ApplicationController
 
     respond_to do |format|
       if @response.heart!
-        format.html { redirect_to share_moment_path(:muddle => @moment.muddle), notice: 'Moment was hearted successfully ' + helpers.pluralize(@response.hearts_count, 'time') + '.' }
+        format.html { redirect_to share_moment_path(@moment.muddle, @moment.token), notice: 'Moment was hearted successfully ' + helpers.pluralize(@response.hearts_count, 'time') + '.' }
         format.json { render json: @moment, status: :created, location: @moment }
       else
         format.html { render action: "new" }
@@ -140,9 +141,9 @@ class MomentsController < ApplicationController
       end
     end
 
-    def restrict_access_to_respondent_or_token
+    def restrict_access_to_token
       # TODO: replace with cancan
-      unless (@moment.token == params[:token]) || (current_user && Response.exists?(:user_id => current_user.id, :moment_id => @moment.id))
+      unless @moment.token == params[:token]
         raise ActionController::RoutingError.new('Not Found') # purposely fake a 404 for unauthorized
       end
     end

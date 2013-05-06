@@ -8,7 +8,7 @@ class Response < ActiveRecord::Base
   attr_accessible :hearts_count
 
   # followed by association macros  
-  belongs_to :moment
+  belongs_to :timeslot
   belongs_to :user
   
   # and validation macros

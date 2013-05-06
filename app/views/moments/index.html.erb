@@ -7,16 +7,16 @@
 <% unless @moments.empty? %>
 
   <ul class="moments browsing-list card">
-    <h1>Your moments</h1>
+    <h1>Your Invitations</h1>
     <% @moments.each do |moment| %>
       <li class="moment card">
-        <%= link_to share_moment_path(moment.muddle), :class => "browsing-list-item" do %></h2>
+        <%= link_to share_moment_path(moment.muddle, moment.token), :class => "browsing-list-item" do %></h2>
           <h2><%= moment.name %></h2>
 
           <%# responses %>
           <% unless moment.positive_responses.empty? %>
             <ul class="unstyled inline">
-              <% moment.positive_responses.each do |response| %>
+              <% moment.responses.each do |response| %>
                 <li>
                   <%= image_tag response.user.image_by_dimension, :class => "img-circle" %>
                 </li>
@@ -24,6 +24,21 @@
             </ul>
           <% end %>
 
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<%# Block of user's authored moments %>
+<% unless @authored_moments.empty? %>
+
+  <ul class="moments browsing-list card">
+    <h1>Your moments</h1>
+    <% @authored_moments.each do |moment| %>
+      <li class="moment card">
+        <%= link_to share_moment_path(moment.muddle, moment.token), :class => "browsing-list-item" do %></h2>
+          <h2><%= moment.name %></h2> 
         <% end %>
       </li>
     <% end %>
